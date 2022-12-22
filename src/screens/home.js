@@ -7,26 +7,32 @@ import Text from '../components/text/text';
 import { spacing } from '../theme/spacing';
 import { MaterialIcons } from '@expo/vector-icons';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
+import { useNavigation } from '@react-navigation/native'
 
-// const PlanetItem = ({name, color}) => {}
+const PlanetItem = ({ item }) => {
+    const { name, color } = item;
+    const navigation = useNavigation();
+    return (
+        <Pressable
+            onPress={() => {
+                navigation.navigate("Details", { planet: item })
+            }} style={styles.item}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <View style={[styles.circle, { backgroundColor: color }]} />
+                <Text preset="h4" style={styles.itemName}>
+                    {name}
+                </Text>
+            </View>
+            <MaterialIcons name="chevron-right" size={18} color="white" />
+        </Pressable>
+    )
+}
 
-export default function Home({navigation}) {
-
-    const renderItem = ({ item}) => {
+export default function Home({ navigation }) {
+    const renderItem = ({ item }) => {
         const { color, name } = item;
         return (
-            <Pressable onPress= {()=>{
-                navigation.navigate("Details")
-            }} style={styles.item}>
-                <View style={{flexDirection:"row",alignItems: "center"}}>
-                    <View style={[styles.circle, { backgroundColor: color }]} />
-                    <Text preset="h4" style={styles.itemName}>
-                        {name}
-                    </Text>
-                </View>
-
-                <MaterialIcons name="chevron-right" size={18} color="white" />
-            </Pressable>
+            <PlanetItem item={item} />
         )
     }
 
