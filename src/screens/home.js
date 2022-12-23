@@ -1,4 +1,4 @@
-import { View, FlatList, StyleSheet } from 'react-native';
+import { View, FlatList, StyleSheet, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import PlanetHeader from '../components/planet-header';
 import { colors } from '../theme/colors';
@@ -7,7 +7,8 @@ import Text from '../components/text/text';
 import { spacing } from '../theme/spacing';
 import { MaterialIcons } from '@expo/vector-icons';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native';
+import {useState} from 'react';
 
 const PlanetItem = ({ item }) => {
     const { name, color } = item;
@@ -35,10 +36,29 @@ export default function Home({ navigation }) {
             <PlanetItem item={item} />
         )
     }
+    const [list,setList] = useState(PLANET_LIST);
+    const searchFilter = (text) => {
+        const filteredList = PLANET_LIST.filter(item => {
+            const itemName = item.name.toLowerCase();
+            const userTypedText = text.toLowerCase();
+
+            return itemName.indexOf(userTypedText) > -1;
+        })
+        setList(filteredList);
+    }
 
     return (
         <SafeAreaView style={styles.container}>
             <PlanetHeader />
+
+            <TextInput
+                placeholder="Type the planet name"
+                placeholderTextColor={colors.white}
+                autoCorrect={false}
+                style={styles.searchInput}
+                onChangeText={(text) => searchFilter(text)}
+            />
+
             <FlatList
                 // containContainerStyle={styles.list}
                 // ItemSeparatorComponent={(props) => {
@@ -46,7 +66,7 @@ export default function Home({ navigation }) {
                 //     return (<View style={{ height: 5, backgroundColor: props.highlighted ? 'green' : 'gray' }} />);
                 // }}
                 style={styles.list}
-                data={PLANET_LIST}
+                data={list}
                 keyExtractor={(item) => item.name}
 
                 renderItem={renderItem}
@@ -84,5 +104,12 @@ const styles = StyleSheet.create({
     separator: {
         borderBottomColor: colors.white,
         borderWidth: 0.5
+    },
+    searchInput: {
+        padding: spacing[4],
+        color: colors.white,
+        borderBottomColor: colors.white,
+        borderBottomWidth: 1,
+        margin: spacing[5],
     }
 })

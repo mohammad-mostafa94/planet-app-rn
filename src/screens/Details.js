@@ -8,7 +8,6 @@ import Text from '../components/text/text';
 
 
 const Details = ({ route }) => {
-
     const planet = route.params.planet;
     const { name, description, rotationTime, revolutionTime, radius, avgTemp ,wikiLink} = planet;
 
